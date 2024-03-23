@@ -8,6 +8,9 @@
     "dist"
   ],
   "types": "dist/index.d.ts",
+  "publishConfig": {
+    "registry": "https//npm.pkg.github.com/prject-adidev"
+  },
   "scripts": {
     "dev": "rollup -c --watch",
     "build": "rollup -c"
