@@ -1,5 +1,5 @@
 {
-  "name": "@muhaca/date-picker",
+  "name": "@muhaca/mc-date-picker",
   "version": "1.0.0",
   "description": "Made with Love",
   "main": "dist/cjs/index.js",
@@ -9,7 +9,7 @@
   ],
   "types": "dist/index.d.ts",
   "publishConfig": {
-    "registry": "https//npm.pkg.github.com/prject-adidev"
+    "@muhaca:registry": "https//npm.pkg.github.com/"
   },
   "scripts": {
     "dev": "rollup -c --watch",
