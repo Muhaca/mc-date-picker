@@ -5,7 +5,7 @@ type Props = {
 }
 
 const Input = (props: Props) => {
-    return <button>{props.label}</button>
+    return <input placeholder={props.label} />
 };
 
 export default Input;
