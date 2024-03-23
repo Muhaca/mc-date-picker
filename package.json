@@ -1,6 +1,6 @@
 {
   "name": "id-holiday-datepicker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Made with Love",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -24,5 +24,54 @@
     "rollup-plugin-dts": "^6.1.0",
     "tslib": "^2.6.2",
     "typescript": "^5.4.3"
-  }
+  },
+  "dependencies": {
+    "ansi-styles": "^3.2.1",
+    "balanced-match": "^1.0.2",
+    "brace-expansion": "^2.0.1",
+    "builtin-modules": "^3.3.0",
+    "chalk": "^2.4.2",
+    "color-convert": "^1.9.3",
+    "color-name": "^1.1.3",
+    "commondir": "^1.0.1",
+    "csstype": "^3.1.3",
+    "deepmerge": "^4.3.1",
+    "escape-string-regexp": "^1.0.5",
+    "estree-walker": "^2.0.2",
+    "fs.realpath": "^1.0.0",
+    "function-bind": "^1.1.2",
+    "glob": "^8.1.0",
+    "has-flag": "^3.0.0",
+    "hasown": "^2.0.2",
+    "inflight": "^1.0.6",
+    "inherits": "^2.0.4",
+    "is-builtin-module": "^3.2.1",
+    "is-core-module": "^2.13.1",
+    "is-module": "^1.0.0",
+    "is-reference": "^1.2.1",
+    "js-tokens": "^4.0.0",
+    "loose-envify": "^1.4.0",
+    "magic-string": "^0.30.8",
+    "mc-datepicker": "^0.6.5",
+    "minimatch": "^5.1.6",
+    "once": "^1.4.0",
+    "path-parse": "^1.0.7",
+    "picocolors": "^1.0.0",
+    "picomatch": "^2.3.1",
+    "resolve": "^1.22.8",
+    "supports-color": "^5.5.0",
+    "supports-preserve-symlinks-flag": "^1.0.0",
+    "wrappy": "^1.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Muhaca/mc-date-picker.git"
+  },
+  "keywords": [
+    "datepicker"
+  ],
+  "bugs": {
+    "url": "https://github.com/Muhaca/mc-date-picker/issues"
+  },
+  "homepage": "https://github.com/Muhaca/mc-date-picker#readme"
 }
