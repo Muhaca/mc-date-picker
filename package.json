@@ -1,11 +1,14 @@
 {
   "name": "id-holiday-datepicker",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Made with Love",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "tsconfig.json",
+    "rollup.config.mjs"
   ],
   "types": "dist/index.d.ts",
   "scripts": {
