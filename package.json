@@ -1,5 +1,5 @@
 {
-  "name": "@muhaca/mc-date-picker",
+  "name": "id-holiday-datepicker",
   "version": "0.0.1",
   "description": "Made with Love",
   "main": "dist/cjs/index.js",
@@ -8,9 +8,6 @@
     "dist"
   ],
   "types": "dist/index.d.ts",
-  "publishConfig": {
-    "@muhaca:registry": "https://npm.pkg.github.com"
-  },
   "scripts": {
     "dev": "rollup -c --watch",
     "build": "rollup -c"
