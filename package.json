@@ -9,7 +9,7 @@
   ],
   "types": "dist/index.d.ts",
   "publishConfig": {
-    "@muhaca:registry": "https//npm.pkg.github.com/"
+    "@muhaca:registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "dev": "rollup -c --watch",
