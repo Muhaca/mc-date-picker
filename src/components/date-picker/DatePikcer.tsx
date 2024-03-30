@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useState } from "react"
 import { monthName, weekdayByMonday } from "../../utils/nameList"
 import { daysInMonth } from "../../utils/daysInMont"
 import { getHolidays } from "../../utils/indonesianHolidays"
@@ -45,14 +45,6 @@ export default function DatePicker() {
     const [month, setMonth] = useState<OptionValue>({ label: monthName[new Date().getMonth()], value: new Date().getMonth() });
     const [year, setYear] = useState<OptionValue>({ label: new Date().getFullYear().toString(), value: new Date().getFullYear() });
 
-    const dataFetchedRef = useRef(false);
-
-    useEffect(() => {
-        if (dataFetchedRef.current) return;
-        dataFetchedRef.current = true;
-        getHolidayList()
-    });
-
     const getHolidayList = async () => {
         let calendarInMonth = daysInMonth(month.value, year.value)
         let holidayInYear = await getHolidays(year.value)
@@ -67,6 +59,9 @@ export default function DatePicker() {
 
     const handleOpenCalendar = () => {
         setIsOpen({ ...isOpen, calendar: !isOpen.calendar })
+        if (holidayList.length === 0) {
+            getHolidayList()
+        }
     }
 
     const handleShowYears = () => {
