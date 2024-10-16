@@ -1,3 +1,3 @@
 import "./index.css"
 
-export * from './components';
+export { DatePicker } from './components/DatePikcer'

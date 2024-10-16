@@ -1,72 +1,20 @@
 {
-  "name": "id-holiday-datepicker",
-  "version": "0.0.5",
+  "name": "@muhaca/datepicker",
+  "version": "0.0.1",
   "description": "Made with Love",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "rollup -c --watch",
-    "build": "rollup -c"
+    "clean": "rimraf dist",
+    "dev": "tsc --emitDeclarationOnly",
+    "build": "npm run dev && node build.js",
+    "prepare": "npm run build"
   },
   "author": "Muhamad Casdi",
   "license": "MIT",
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-typescript": "^11.1.6",
-    "@types/react": "^18.2.69",
-    "postcss": "^8.4.38",
-    "react": "^18.2.0",
-    "rollup": "^4.13.0",
-    "rollup-plugin-dts": "^6.1.0",
-    "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-svg": "^2.0.0",
-    "tailwindcss": "^3.4.1",
-    "tslib": "^2.6.2",
-    "typescript": "^5.4.3"
-  },
-  "dependencies": {
-    "ansi-styles": "^3.2.1",
-    "balanced-match": "^1.0.2",
-    "brace-expansion": "^2.0.1",
-    "builtin-modules": "^3.3.0",
-    "chalk": "^2.4.2",
-    "color-convert": "^1.9.3",
-    "color-name": "^1.1.3",
-    "commondir": "^1.0.1",
-    "csstype": "^3.1.3",
-    "deepmerge": "^4.3.1",
-    "escape-string-regexp": "^1.0.5",
-    "estree-walker": "^2.0.2",
-    "fs.realpath": "^1.0.0",
-    "function-bind": "^1.1.2",
-    "glob": "^8.1.0",
-    "has-flag": "^3.0.0",
-    "hasown": "^2.0.2",
-    "inflight": "^1.0.6",
-    "inherits": "^2.0.4",
-    "is-builtin-module": "^3.2.1",
-    "is-core-module": "^2.13.1",
-    "is-module": "^1.0.0",
-    "is-reference": "^1.2.1",
-    "js-tokens": "^4.0.0",
-    "loose-envify": "^1.4.0",
-    "magic-string": "^0.30.8",
-    "mc-datepicker": "^0.6.5",
-    "minimatch": "^5.1.6",
-    "once": "^1.4.0",
-    "path-parse": "^1.0.7",
-    "picocolors": "^1.0.0",
-    "picomatch": "^2.3.1",
-    "resolve": "^1.22.8",
-    "supports-color": "^5.5.0",
-    "supports-preserve-symlinks-flag": "^1.0.0",
-    "wrappy": "^1.0.2"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Muhaca/mc-date-picker.git"
@@ -77,5 +25,24 @@
   "bugs": {
     "url": "https://github.com/Muhaca/mc-date-picker/issues"
   },
-  "homepage": "https://github.com/Muhaca/mc-date-picker#readme"
+  "homepage": "https://github.com/Muhaca/mc-date-picker#readme",
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
+  "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.24.0",
+    "esbuild-css-modules-plugin": "^3.1.2",
+    "postcss": "^8.4.47",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "rimraf": "^5.0.10",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2"
+  }
 }

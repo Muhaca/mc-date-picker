@@ -1,13 +1,8 @@
 import React, { useState } from "react"
-import { monthName, weekdayByMonday } from "../../utils/nameList"
-import { daysInMonth } from "../../utils/daysInMont"
-import { getHolidays } from "../../utils/indonesianHolidays"
-import getYears from "../../utils/getYaers"
-import IconCalendar from "../../assets/icons/ic-calendar.svg"
-import IconCaretDown from "../../assets/icons/ic-caret-down.svg"
-import IconCaretUp from "../../assets/icons/ic-caret-up.svg"
-import IconChevronLeft from "../../assets/icons/ic-chevron-left.svg"
-import IconChevronRight from "../../assets/icons/ic-chevron-right.svg"
+import { monthName, weekdayByMonday } from "../utils/nameList"
+import { daysInMonth } from "../utils/daysInMont"
+import { getHolidays } from "../utils/indonesianHolidays"
+import getYears from "../utils/getYaers"
 
 type OpenCalender = {
     calendar: boolean,
@@ -36,7 +31,7 @@ type ArrayHoliday = {
     is_national_holiday: boolean
 }
 
-export default function DatePicker() {
+export const DatePicker = () => {
     const [isOpen, setIsOpen] = useState<OpenCalender>({ calendar: false, years: false, month: false, is_valid: false });
     const [calendar, setCalendar] = useState<ArrayCalender[]>([]);
     const [holidayList, setHolidayList] = useState<ArrayHoliday[]>([]);
@@ -122,7 +117,10 @@ export default function DatePicker() {
                 <input value={date} onChange={handleChange} type="text" name="date" id="date" placeholder="dd/mm/yy" className="uppercase block w-full h-12 rounded-md border-0 py-1.5 pl-1.5 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                 <div className="absolute inset-y-0 right-0 flex items-center">
                     <button onClick={handleOpenCalendar} className="p-2">
-                        <img src={IconCalendar} alt="Icon Calendar" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                            <path d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM7.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8.25 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM9.75 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM10.5 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM12.75 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM14.25 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
+                            <path fillRule="evenodd" d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z" clipRule="evenodd" />
+                        </svg>
                     </button>
                 </div>
                 {
@@ -132,16 +130,28 @@ export default function DatePicker() {
                             <div>
                                 <label>{month.label}</label>
                                 <button onClick={handleShowYears} className="p-2">
-                                    <img src={isOpen.years ? IconCaretDown : IconCaretUp} alt="Picture of the author" />
+                                    {isOpen.years ?
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                            <path fillRule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clipRule="evenodd" />
+                                        </svg>
+                                        :
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                            <path fillRule="evenodd" d="M11.47 7.72a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 1 1-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 0 1-1.06-1.06l7.5-7.5Z" clipRule="evenodd" />
+                                        </svg>
+                                    }
                                 </button>
                             </div>
                             {isOpen.years ? null :
                                 <div className="flex gap-10">
                                     <button onClick={hanldePrevMonth} className="p-2">
-                                        <img src={IconChevronLeft} alt="Picture of the author" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                            <path fillRule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clipRule="evenodd" />
+                                        </svg>
                                     </button>
                                     <button onClick={hanldeNextMonth} className="p-2">
-                                        <img src={IconChevronRight} alt="Picture of the author" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                            <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clipRule="evenodd" />
+                                        </svg>
                                     </button>
                                 </div>
                             }
@@ -186,5 +196,4 @@ export default function DatePicker() {
             </div>
         </div>
     )
-
 }
