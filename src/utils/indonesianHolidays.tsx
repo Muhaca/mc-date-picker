@@ -1,6 +1,6 @@
 export const getHolidays = async (year: number) => {
     let data: any[] = []
-    let url = 'https://api-harilibur.vercel.app/api'
+    let url = `https://api-harilibur.vercel.app/api${year ? '?year=' + year : ''}`
     let response = await fetch(url)
     if (response.ok) {
         let holiday = await response.json()

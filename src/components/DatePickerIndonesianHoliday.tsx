@@ -18,6 +18,7 @@ export const DatePickerIndonesianHoliday = () => {
         let calendarInMonth = daysInMonth(month.value, year.value)
         let holidayInYear = await getHolidays(year.value)
 
+
         const calendarWithHoliday = calendarInMonth.map((day) => {
             const holiday = holidayInYear.filter((holi) => (holi.holiday_date === day.full_date))[0]
             return { ...day, ...holiday }
@@ -43,13 +44,16 @@ export const DatePickerIndonesianHoliday = () => {
     const hanldeNextMonth = async () => {
         let nextMonth = month.value + 1
         let nextYear = year?.value
+        let holidayInYear = holidayList
         if (nextMonth === 12) {
             nextMonth = 0
             nextYear = nextYear + 1
+            holidayInYear = await getHolidays(nextYear)
+            setHolidayList(holidayInYear)
         }
         let calendarInMonth = daysInMonth(nextMonth, nextYear)
         const calendarWithHoliday = calendarInMonth.map((day) => {
-            const holiday = holidayList.filter((holi) => (holi.holiday_date === day.full_date))[0]
+            const holiday = holidayInYear.filter((holi) => (holi.holiday_date === day.full_date))[0]
             return { ...day, ...holiday }
         })
         setCalendar(calendarWithHoliday);
@@ -60,13 +64,16 @@ export const DatePickerIndonesianHoliday = () => {
     const hanldePrevMonth = async () => {
         let prevMont = month.value - 1
         let prevYear = year?.value
+        let holidayInYear = holidayList
         if (prevMont === -1) {
             prevMont = 11
             prevYear = prevYear - 1
+            holidayInYear = await getHolidays(prevYear)
+            setHolidayList(holidayInYear)
         }
         let calendarInMonth = daysInMonth(prevMont, prevYear)
         const calendarWithHoliday = calendarInMonth.map((day) => {
-            const holiday = holidayList.filter((holi) => (holi.holiday_date === day.full_date))[0]
+            const holiday = holidayInYear.filter((holi) => (holi.holiday_date === day.full_date))[0]
             return { ...day, ...holiday }
         })
         setCalendar(calendarWithHoliday);
@@ -77,6 +84,20 @@ export const DatePickerIndonesianHoliday = () => {
     const handleChange = (e: any) => {
         let value = e.target.value
         setDate(value)
+    }
+
+    const handleChangeYear = async (newYear: any) => {
+        let calendarInMonth = daysInMonth(month.value, newYear)
+        let holidayInYear = await getHolidays(newYear)
+        const calendarWithHoliday = calendarInMonth.map((day) => {
+            const holiday = holidayInYear.filter((holi) => (holi.holiday_date === day.full_date))[0]
+            return { ...day, ...holiday }
+        })
+        setCalendar(calendarWithHoliday);
+        setMonth({ ...month, label: monthName[month.value], value: month.value })
+        setYear({ ...year, value: newYear, label: newYear.toString() })
+        setHolidayList(holidayInYear)
+        setIsOpen({ ...isOpen, years: false })
     }
 
     const hanldePickDate = (e: any) => {
@@ -116,12 +137,12 @@ export const DatePickerIndonesianHoliday = () => {
                             </svg>
                         </button>
                     </div>
-                    {isOpen.calendar &&
-                        <div className="absolute w-full mt-2 bg-white rounded-xl">
-                            <div className="flex justify-between items-center py-2 px-3">
-                                <div className="flex gap-2 items-center">
-                                    <p>{month.label}</p>
-                                    <p>{year.label}</p>
+                    <div className={`transition-opacity ease-in-out delay-150 duration-500 ${isOpen.calendar ? 'opacity-100' : 'opacity-0'}`}>
+                        <div className={`${isOpen?.calendar ? '' : 'hidden'} absolute w-full mt-2 bg-white rounded-xl`}>
+                            <div className="flex justify-between items-center py-4 px-3 shadow">
+                                <div className="flex gap-2 items-center pl-2">
+                                    <button className="font-semibold">{month.label}</button>
+                                    <button onClick={handleShowYears} className="font-semibold">{year.label}</button>
                                 </div>
                                 <div className="flex justify-between">
                                     <button onClick={hanldePrevMonth}>
@@ -136,34 +157,48 @@ export const DatePickerIndonesianHoliday = () => {
                                     </button>
                                 </div>
                             </div>
-                            <div className="w-full" >
-                                <div className="grid grid-cols-7 grid-flow-row p-2 place-items-center items-center">
-                                    {weekdayByMonday.map((day: any) => {
-                                        return (
-                                            <label key={day} className={`w-8 text-center font-semibold ${isWeekEnd(day) && 'text-red-500'}`}>{day?.substring(0, 3) || ''}</label>
-                                        )
-                                    })}
+                            {isOpen?.years ?
+                                <div className="h-[16rem] gap-3 grid grid-cols-5 grid-flow-row p-2 place-items-center items-center w-full overflow-y-auto">
+                                    {yearsList.length > 0 ?
+                                        yearsList.map((list, idx) => {
+                                            return (
+                                                <button onClick={() => handleChangeYear(list)} key={idx} className={`text-center font-semibold hover:bg-blue-500 hover:rounded-md hover:text-white px-2 py-1`}>{list}</button>
+                                            )
+                                        })
+                                        :
+                                        null
+                                    }
                                 </div>
-                                <div className="grid grid-cols-7 grid-flow-row p-2 place-items-center items-center">
-                                    {calendar.map((list: any, idx: any) => {
-                                        return (
-                                            <div key={idx} className={`group rounded-full relative flex w-8 h-8 items-center align-middle justify-center hover:bg-blue-500 hover:rounded-full ${list?.is_national_holiday && list?.is_month ? 'bg-red-500' : ''}`}>
-                                                <label
-                                                    onClick={() => hanldePickDate(list)}
-                                                    className={`text-center group-hover:text-white ${coloringText(list)}`}>
-                                                    {list?.date}
-                                                </label>
-                                                <span
-                                                    className={`absolute z-50 text-center top-10 scale-0 transition-all rounded bg-gray-950 w-40 p-2 text-xs text-white group-hover:scale-100 ${!list.is_national_holiday && 'hidden'}`}>
-                                                    {list.holiday_name}
-                                                </span>
-                                            </div>
-                                        )
-                                    })}
+                                :
+                                <div className="w-full h-[16rem]" >
+                                    <div className="grid grid-cols-7 grid-flow-row p-2 place-items-center items-center">
+                                        {weekdayByMonday.map((day: any) => {
+                                            return (
+                                                <label key={day} className={`w-8 text-center font-semibold ${isWeekEnd(day) && 'text-red-500'}`}>{day?.substring(0, 3) || ''}</label>
+                                            )
+                                        })}
+                                    </div>
+                                    <div className="grid grid-cols-7 grid-flow-row p-2 place-items-center items-center">
+                                        {calendar.map((list: any, idx: any) => {
+                                            return (
+                                                <div key={idx} className={`group rounded-full relative flex w-8 h-8 items-center align-middle justify-center hover:bg-blue-500 hover:rounded-full ${list?.is_national_holiday && list?.is_month ? 'bg-red-500' : ''}`}>
+                                                    <label
+                                                        onClick={() => hanldePickDate(list)}
+                                                        className={`text-center group-hover:text-white ${coloringText(list)}`}>
+                                                        {list?.date}
+                                                    </label>
+                                                    <span
+                                                        className={`absolute z-50 text-center top-10 scale-0 transition-all rounded bg-gray-950 w-40 p-2 text-xs text-white group-hover:scale-100 ${!list.is_national_holiday && 'hidden'}`}>
+                                                        {list.holiday_name}
+                                                    </span>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         </div>
-                    }
+                    </div>
                 </div>
             </div>
         </div>
