@@ -3,33 +3,8 @@ import { monthName, weekdayByMonday } from "../utils/nameList"
 import { daysInMonth } from "../utils/daysInMont"
 import { getHolidays } from "../utils/indonesianHolidays"
 import getYears from "../utils/getYaers"
+import { ArrayCalender, ArrayHoliday, OpenCalender, OptionValue } from "../utils/type"
 
-type OpenCalender = {
-    calendar: boolean,
-    years: boolean,
-    month: boolean
-    is_valid: boolean
-}
-
-type ArrayCalender = {
-    is_month: boolean,
-    date: number,
-    month: number,
-    year: number,
-    day: string,
-    month_name: string,
-}
-
-type OptionValue = {
-    label: string,
-    value: number
-}
-
-type ArrayHoliday = {
-    holiday_date: string,
-    holiday_name: string,
-    is_national_holiday: boolean
-}
 
 export const DatePicker = () => {
     const [isOpen, setIsOpen] = useState<OpenCalender>({ calendar: false, years: false, month: false, is_valid: false });
@@ -127,7 +102,7 @@ export const DatePicker = () => {
                     isOpen.calendar &&
                     <div className="absolute p-4 font-sans text-sm font-normal break-words whitespace-normal bg-white border rounded-lg shadow-lg w-full h-72 border-blue-gray-50 text-blue-gray-500 shadow-blue-gray-500/10 focus:outline-none">
                         <div className="flex justify-between">
-                            <div>
+                            <div className="flex items-center">
                                 <label>{month.label}</label>
                                 <button onClick={handleShowYears} className="p-2">
                                     {isOpen.years ?
@@ -158,7 +133,7 @@ export const DatePicker = () => {
                         </div>
                         <div className="mt-5" >
                             {isOpen.years ?
-                                <div className="grid grid-cols-7 grid-flow-row gap-4 mt-5">
+                                <div className="bg-slate-400 h-80 grid grid-cols-7 grid-flow-row gap-4 mt-5 overflow-y-auto">
                                     {yearsList.length > 0 ?
                                         yearsList.map((list, idx) => {
                                             return (
