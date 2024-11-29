@@ -1,16 +1,18 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import { monthName, weekdayByMonday } from "../utils/nameList"
 import { daysInMonth } from "../utils/daysInMont"
 import { getHolidays } from "../utils/indonesianHolidays"
 import getYears from "../utils/getYaers"
-import { ArrayCalender, ArrayHoliday, OpenCalender, OptionValue } from "../utils/type"
+import { ArrayCalender, ArrayHoliday, OptionValue } from "../utils/type"
+import React from "react"
 
 export const DatePickerIndonesianHoliday = () => {
-    const [isOpen, setIsOpen] = useState<OpenCalender>({ calendar: false, years: false, month: false, is_valid: false });
+    const [view, setView] = useState<'date' | 'year' | 'month'>('date');
+    const [openCalender, setOpenCalender] = useState(false);
     const [calendar, setCalendar] = useState<ArrayCalender[]>([]);
     const [holidayList, setHolidayList] = useState<ArrayHoliday[]>([]);
-    const [yearsList, setYearsList] = useState<number[]>([]);
-    const [date, setDate] = useState<string>('');
+    const [yearsList, setYearsList] = useState<number[]>(getYears());
+    const [date, setDate] = useState<any>(null);
     const [month, setMonth] = useState<OptionValue>({ label: monthName[new Date().getMonth()], value: new Date().getMonth() });
     const [year, setYear] = useState<OptionValue>({ label: new Date().getFullYear().toString(), value: new Date().getFullYear() });
 
@@ -28,17 +30,19 @@ export const DatePickerIndonesianHoliday = () => {
     }
 
     const handleOpenCalendar = () => {
-        setIsOpen({ ...isOpen, calendar: !isOpen.calendar })
+        setOpenCalender(!openCalender)
+        setView('date')
         if (holidayList.length === 0) {
             getHolidayList()
         }
     }
 
+    const handleShowMonts = () => {
+        setView(view === 'month' ? 'date' : 'month')
+    }
+
     const handleShowYears = () => {
-        let show = isOpen.years
-        let yearsList = getYears()
-        setIsOpen({ ...isOpen, years: !show })
-        setYearsList(yearsList)
+        setView(view === 'year' ? 'date' : 'year')
     }
 
     const hanldeNextMonth = async () => {
@@ -81,11 +85,6 @@ export const DatePickerIndonesianHoliday = () => {
         setYear({ ...year, value: prevYear, label: prevYear.toString() })
     }
 
-    const handleChange = (e: any) => {
-        let value = e.target.value
-        setDate(value)
-    }
-
     const handleChangeYear = async (newYear: any) => {
         let calendarInMonth = daysInMonth(month.value, newYear)
         let holidayInYear = await getHolidays(newYear)
@@ -97,13 +96,12 @@ export const DatePickerIndonesianHoliday = () => {
         setMonth({ ...month, label: monthName[month.value], value: month.value })
         setYear({ ...year, value: newYear, label: newYear.toString() })
         setHolidayList(holidayInYear)
-        setIsOpen({ ...isOpen, years: false })
+        setView('date')
     }
 
     const hanldePickDate = (e: any) => {
-        let newDate = e.date + "/" + e.month + "/" + e.year
-        setDate(newDate)
-        setIsOpen({ ...isOpen, calendar: false })
+        setDate(e)
+        setOpenCalender(!openCalender)
     }
 
     const isWeekEnd = (days: string) => {
@@ -121,14 +119,99 @@ export const DatePickerIndonesianHoliday = () => {
         return styles
     }
 
+    const ComponentView = () => {
+        const selectView = {
+            date: function () {
+                return (
+                    <div className="w-full h-[16rem] grid grid-cols-7 grid-flow-row p-2 place-items-center items-center">
+                        {weekdayByMonday.map((day: any) => {
+                            return (
+                                <label key={day} className={`font-roboto w-8 text-center font-semibold ${isWeekEnd(day) && 'text-red-500'}`}>{day?.substring(0, 3) || ''}</label>
+                            )
+                        })}
 
+                        {calendar.map((list: any, idx: any) => {
+                            return (
+                                <div
+                                    key={idx}
+                                    onClick={() => hanldePickDate(list)}
+                                    className={`group rounded-full relative flex w-8 h-8 items-center align-middle justify-center hover:bg-blue-500 hover:rounded-full cursor-pointer ${list?.is_national_holiday && list?.is_month ? 'bg-red-500' : ''}`}>
+                                    <label
+                                        onClick={() => hanldePickDate(list)}
+                                        className={`font-roboto text-center group-hover:text-white cursor-pointer w-6 h-6 rounded-full ${coloringText(list)}`}>
+                                        {list?.date}
+                                    </label>
+                                    <span
+                                        className={`font-roboto absolute z-50 text-center top-10 scale-0 transition-all rounded bg-gray-950 w-40 p-2 text-xs text-white group-hover:scale-100 ${!list.is_national_holiday && 'hidden'}`}>
+                                        {list.holiday_name}
+                                    </span>
+                                </div>
+                            )
+                        })}
+                    </div>
+                )
+            },
+            year: function () {
+                return (
+                    <div className="h-[16rem] gap-3 grid grid-cols-5 grid-flow-row p-2 place-items-center items-center w-full overflow-y-auto">
+                        {yearsList.map((list: number, idx: any) => {
+                            return (
+                                <button onClick={() => handleChangeYear(list)} key={idx} className={`font-roboto text-center font-semibold hover:bg-blue-500 hover:rounded-md hover:text-white px-2 py-1`}>{list}</button>
+                            )
+                        })}
+                    </div>
+                )
+            },
+            month: function () {
+                return (
+                    <div className="h-[16rem] gap-3 grid grid-cols-5 grid-flow-row p-2 place-items-center items-center w-full overflow-y-auto">
+                        {monthName.map((list: string, idx: any) => {
+                            return (
+                                <button onClick={() => handleChangeYear(list)} key={idx} className={`font-roboto text-center font-semibold hover:bg-blue-500 hover:rounded-md hover:text-white px-2 py-1`}>{list}</button>
+                            )
+                        })}
+                    </div>
+                )
+            }
+        }
+
+        return (
+            <>
+                <div className="flex justify-between items-center p-3 shadow">
+                    <div className="flex gap-2 items-center pl-2">
+                        <button
+                            onClick={handleShowYears}
+                            className="font-roboto font-semibold cursor-pointer p-1 hover:bg-blue-100 hover:rounded-md">
+                            {`${month.label} ${year.label}`}
+                        </button>
+                    </div>
+                    <div className="flex justify-between">
+                        <button onClick={hanldePrevMonth} className="p-[2px] hover:bg-blue-100 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                <path fillRule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clipRule="evenodd" />
+                            </svg>
+                        </button>
+                        <button onClick={hanldeNextMonth} className="p-[2px] hover:bg-blue-100 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clipRule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                {selectView[view]()}
+            </>
+        )
+    }
 
     return (
         <div className="">
             <div className="w-full h-[8rem] bg-blue-100 rounded-xl p-5 shadow-md">
                 <p className="text-xl font-bold font-roboto">Select Date</p>
                 <div className="relative mt-2 rounded-md shadow-sm w-full">
-                    <input value={date} onChange={handleChange} type="text" name="date" id="date" placeholder="dd/mm/yy" className="block bg-white text-black w-full h-10 uppercase text-sm px-3 py-2 rounded-lg border outline-blue-400 focus:border-blue-400" />
+                    <div onClick={handleOpenCalendar} className="block bg-white text-black w-full h-10 text-sm px-3 py-2 rounded-lg border hover:bg-teal-100 cursor-pointer">
+                        <p className="capitalize w-full font-roboto text-base">{date ? `${date?.date} ${date?.month_name} ${date?.year}` : 'Select Date'}</p>
+                    </div>
                     <div className="absolute inset-y-0 right-0 top-0 flex">
                         <button onClick={handleOpenCalendar} className="p-2">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
@@ -137,66 +220,11 @@ export const DatePickerIndonesianHoliday = () => {
                             </svg>
                         </button>
                     </div>
-                    <div className={`transition-opacity ease-in-out delay-150 duration-500 ${isOpen.calendar ? 'opacity-100' : 'opacity-0'}`}>
-                        <div className={`${isOpen?.calendar ? '' : 'hidden'} absolute w-full mt-2 bg-white rounded-xl`}>
-                            <div className="flex justify-between items-center py-4 px-3 shadow">
-                                <div className="flex gap-2 items-center pl-2">
-                                    <button className="font-semibold">{month.label}</button>
-                                    <button onClick={handleShowYears} className="font-semibold">{year.label}</button>
-                                </div>
-                                <div className="flex justify-between">
-                                    <button onClick={hanldePrevMonth}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
-                                            <path fillRule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clipRule="evenodd" />
-                                        </svg>
-                                    </button>
-                                    <button onClick={hanldeNextMonth}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
-                                            <path fillRule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clipRule="evenodd" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            {isOpen?.years ?
-                                <div className="h-[16rem] gap-3 grid grid-cols-5 grid-flow-row p-2 place-items-center items-center w-full overflow-y-auto">
-                                    {yearsList.length > 0 ?
-                                        yearsList.map((list, idx) => {
-                                            return (
-                                                <button onClick={() => handleChangeYear(list)} key={idx} className={`text-center font-semibold hover:bg-blue-500 hover:rounded-md hover:text-white px-2 py-1`}>{list}</button>
-                                            )
-                                        })
-                                        :
-                                        null
-                                    }
-                                </div>
-                                :
-                                <div className="w-full h-[16rem]" >
-                                    <div className="grid grid-cols-7 grid-flow-row p-2 place-items-center items-center">
-                                        {weekdayByMonday.map((day: any) => {
-                                            return (
-                                                <label key={day} className={`w-8 text-center font-semibold ${isWeekEnd(day) && 'text-red-500'}`}>{day?.substring(0, 3) || ''}</label>
-                                            )
-                                        })}
-                                    </div>
-                                    <div className="grid grid-cols-7 grid-flow-row p-2 place-items-center items-center">
-                                        {calendar.map((list: any, idx: any) => {
-                                            return (
-                                                <div key={idx} className={`group rounded-full relative flex w-8 h-8 items-center align-middle justify-center hover:bg-blue-500 hover:rounded-full ${list?.is_national_holiday && list?.is_month ? 'bg-red-500' : ''}`}>
-                                                    <label
-                                                        onClick={() => hanldePickDate(list)}
-                                                        className={`text-center group-hover:text-white ${coloringText(list)}`}>
-                                                        {list?.date}
-                                                    </label>
-                                                    <span
-                                                        className={`absolute z-50 text-center top-10 scale-0 transition-all rounded bg-gray-950 w-40 p-2 text-xs text-white group-hover:scale-100 ${!list.is_national_holiday && 'hidden'}`}>
-                                                        {list.holiday_name}
-                                                    </span>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-                            }
+
+                    {/* Calendar View */}
+                    <div className={`transition-opacity ease-in-out delay-150 duration-500 ${openCalender ? 'opacity-100' : 'opacity-0'}`}>
+                        <div className={`${openCalender ? '' : 'hidden'} absolute w-full mt-2 bg-white rounded-xl`}>
+                            <ComponentView />
                         </div>
                     </div>
                 </div>
